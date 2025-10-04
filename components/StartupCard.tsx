@@ -3,9 +3,11 @@ import { EyeIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from './ui/button'
+import { Startup ,Author} from '@/sanity/types'
 
+export type StartupTypeCard = Omit<Startup,"author"> & {author:Author};
 const StartupCard = ({ post }: { post: StartupTypeCard }) => {
-    const { _createdAt, views, author: { _id: authorId, name }, title, category, image, _id, description } = post;
+    const { _createdAt, views, author, title, category, image, _id, description } = post;
     
     return (
         <li className='bg-white group border-[5px] border-black rounded-[22px]  hover:border-pink-600 hover:shadow-300 transition-all duration-500 hover:shadow-300 hover:bg-primary-100 group w-full max-w-sm mx-auto sm:max-w-none'>
@@ -22,16 +24,16 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
 
             <div className='px-5 pb-5 space-y-4'>
                 <div className='flex items-center justify-between gap-3'>
-                    <Link href={`/user/${authorId}`} className='flex-1 min-w-0'>
+                    <Link href={`/user/${author?._id}`} className='flex-1 min-w-0'>
                         <p className='font-medium text-sm sm:text-base text-black line-clamp-1 hover:text-primary transition-colors duration-300'>
-                            {name}
+                            {author?.name}
                         </p>
                     </Link>
-                    <Link href={`/user/${authorId}`} className='shrink-0'>
+                    <Link href={`/user/${author?._id}`} className='shrink-0'>
                         <Image 
                             src="https://via.placeholder.com/600x400" 
                             unoptimized 
-                            alt={`${name} profile`} 
+                            alt={`${author?.name} profile`} 
                             width={40} 
                             height={40} 
                             className="rounded-full sm:w-12 sm:h-12 border-2 border-gray-200 group-hover:border-pink-600 transition-colors duration-300"
@@ -64,7 +66,7 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
 
                 {/* Footer - Category & Button */}
                 <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2'>
-                    <Link href={`/?query=${category.toLowerCase()}`} className='order-2 sm:order-1'>
+                    <Link href={`/?query=${category?.toLowerCase()}`} className='order-2 sm:order-1'>
                         <span className='inline-block font-medium text-sm sm:text-base text-black bg-gray-100 px-3 py-1 rounded-full hover:bg-primary-100 transition-colors duration-300'>
                             #{category}
                         </span>
