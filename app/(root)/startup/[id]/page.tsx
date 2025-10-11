@@ -4,6 +4,8 @@ import { STARTUP_BY_ID_QUERY } from '@/sanity/lib/queries';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import markdownit from 'markdown-it'
+const md = markdownit();
 
 export const experimental_ppr = true
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -12,6 +14,8 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   console.log(id)
   const post = await client.fetch(STARTUP_BY_ID_QUERY, { id });
   if (!post) return notFound();
+
+  const parsedContent = md.render(post?.pitch || '')
   return (
     <>
     <section className='w-full  min-h-[230px]  bg-pink-600  flex justify-center items-center flex-col py-10 px-6'>
@@ -21,7 +25,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
       </h1>
       <p className='font-medium text-[20px] text-white  text-center break-words !max-w-5xl'>{post?.description}</p>
     </section>
-      <section className='px-6 py-12 max-w-7xl mx-auto'>
+      <section className='px-4 py-8 max-w-7xl mx-auto'>
         <img src={post?.image} alt="thumbnail" className='w-full h-auto rounded-xl' />
         <div className='space-y-5 mt-10 max-w-4xl mx-auto'>
           <div className='flex justify-between gap-5'>
@@ -32,8 +36,17 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <p className=''>@{post.author.username}</p>
               </div>
             </Link>
+                        <span className=' font-medium text-center flex items-center justify-center text-sm sm:text-base text-black bg-gray-100 px-3 py-1 rounded-full hover:bg-primary-100 transition-colors duration-300'>
+              {post.category}
+            </span>
           </div>
+          <h3 className='text-3xl font-bold'>Pitch details</h3>
+          {parsedContent ? (
+            <article dangerouslySetInnerHTML={{__html:parsedContent}} />
+          ) : <p>No details provided</p> }
         </div>
+
+        <hr />
       </section>
     </>
   )
