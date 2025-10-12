@@ -45,7 +45,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
             <article dangerouslySetInnerHTML={{__html:parsedContent}} />
           ) : <p>No details provided</p> }
         </div>
-
+{/*  */}
         <hr />
       </section>
     </>
